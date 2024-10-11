@@ -1,5 +1,9 @@
 #pragma once
 
+#include <iostream>
+#include <sstream>
+
+
 /* Header protector */
 #ifndef VECTORS_H
 #define VECTORS_H
@@ -67,7 +71,7 @@ struct Vector3
 		return x == other.x && y == other.y && z == other.z;
 	}	
 
-	bool operator==(Vector3& other)
+	bool operator!=(Vector3& other)
 	{
 		return !(*this == other);
 	}
@@ -106,6 +110,12 @@ struct Vector3
 		x /= other.x;
 		y /= other.y;
 		z /= other.z;
+	}
+
+	friend std::ostream& operator<<(std::ostream& stream, Vector3& print)
+	{
+		stream << "(" << print.x << ", " << print.y << ", " << print.z << ")";
+		return stream;
 	}
 };
 
