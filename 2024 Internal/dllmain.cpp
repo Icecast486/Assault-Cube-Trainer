@@ -1,11 +1,14 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
+
 #include "pch.h"
 
-#include "Entity.h"
-#include "Offsets.h"
-
+#include "gamestructures.h"
+#include "offsets.h"
+#include "engine.h"
+#include "aimbot.h"
 
 DWORD WINAPI Init(HMODULE hModule);
+
 
 DWORD WINAPI Init(HMODULE hModule)
 {
@@ -15,24 +18,69 @@ DWORD WINAPI Init(HMODULE hModule)
     FILE* f;
     freopen_s(&f, "CONOUT$", "w", stdout);
 
-    uintptr_t moduleBase = (uintptr_t)GetModuleHandle(L"ac_client.exe");
+    Engine::initializeEngine();
 
-    Entity* localPlayer;
+    Entity* localPlayer = Engine::getLocalPlayer();
+
+    /* Toggles */
+    bool bAimBot = false;
+    bool bHealth = false;
 
     while (!GetAsyncKeyState(VK_END) & 1)
     {
-        localPlayer = *(Entity**)(moduleBase + OFFSET_LOCALENT);
-        localPlayer->mHeatlh = 1000;
 
-        cout << localPlayer->mPos << endl;
+        if (GetAsyncKeyState(VK_F1) & 1)
+        {
+            bHealth = !bHealth;
+
+            if (bHealth)
+            {
+                std::cout << "health :: [on]\n";
+            }
+
+            else
+            {
+                std::cout << "health :: [off]\n";
+            }
+        }
+
+        if (GetAsyncKeyState(VK_F2) & 1)
+        {
+
+            bAimBot = !bAimBot;
+
+            if (bAimBot)
+            {
+                std::cout << "aimbot :: [on]\n";
+            }
+
+            else
+            {
+                std::cout << "aimbot :: [off]\n";
+            }
+        }
+
+
+        if (bHealth)
+        {
+            localPlayer->mHealth = 7777;
+            localPlayer->mCurrentWeaponAmmo = 7777;
+        }
+
+        if (bAimBot)
+        {
+            Aimbot::execute();
+        }
     }
 
-        fclose(f);
-        FreeConsole();
-        FreeLibraryAndExitThread(hModule, 0);
-        return 0;
 
+    fclose(f);
+    FreeConsole();
+    FreeLibraryAndExitThread(hModule, 0);
+
+    return 0;
 }
+
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
