@@ -8,7 +8,7 @@ to the project.
 To use the internal trainer, follow these steps to inject the DLL into the target application:
 
 1. **Download a DLL Injector**:
-   - If you don’t already have one, download a trusted DLL injector (e.g., Extreme Injector or Xenos Injector).
+   - If you don’t already have one, download a trusted DLL injector (e.g., [Extreme Injector](https://github.com/master131/ExtremeInjector) or [Xenos Injector](https://github.com/DarthTon/Xenos)).
 
 2. **Open the DLL Injector**:
    - Run the DLL injector as an administrator to ensure you have the necessary permissions.
