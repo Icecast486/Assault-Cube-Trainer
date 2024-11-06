@@ -5,6 +5,7 @@ to the project.
 
 ## 💉 DLL Injection Instructions
 
+The following steps assume you've already compiled the project.
 To use the internal trainer, follow these steps to inject the DLL into the target application:
 
 1. **Download a DLL Injector**:
@@ -24,13 +25,19 @@ To use the internal trainer, follow these steps to inject the DLL into the targe
    - Click "Inject" or a similar option, depending on the injector. This should inject the DLL into the target application.
 
 6. **Confirm Injection**:
-   - Check if the trainer interface (a console window). If it doesn’t, recheck the steps or try restarting the process.
+   - Check if the trainer interface pops up (a console window). If it doesn’t, recheck the steps or try restarting the process.
 
 ## 📋 Usage
 
 After injecting the DLL, use the following keys to control the trainer:
 
-- **END**: Press to uninject the cheat and stop the trainer.
+- **END**: Uninject the cheat and stop the trainer.
 - **F1**: Activates Godmode.
 - **F2**: Enables Infinite Ammo.
 - **F3**: Toggles Aimbot.
+
+## 🌎 Future Plans
+- **imGUI Implementation:** Fully functional user interface instead of console window.
+- **ESP/Wallhack:** Box, Health, Ammo esp.
+- **FOV Based AimBot:** Aimbot that targets based on FOV of local player.
+- **Other Features:** Infinite Armor, Infinite Weapon Damage, Silent Aim.
