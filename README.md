@@ -3,7 +3,7 @@ This is an internal trainer for AssaultCube 1.3.0.2. This project is a way for m
 skills, using IDA PRO, cheat engine, re-class, and in addition keeping track of the changes I make 
 to the project.
 
-## DLL Injection Instructions
+## 💉 DLL Injection Instructions
 
 To use the internal trainer, follow these steps to inject the DLL into the target application:
 
@@ -26,7 +26,7 @@ To use the internal trainer, follow these steps to inject the DLL into the targe
 6. **Confirm Injection**:
    - Check if the trainer interface (a console window). If it doesn’t, recheck the steps or try restarting the process.
 
-## Usage
+## 📋 Usage
 
 After injecting the DLL, use the following keys to control the trainer:
 
