@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "aimbot.h"
 
 #include <iostream>
@@ -7,6 +6,8 @@
 
 #define PI 3.1415926535
 
+Aimbot::Aimbot() : Hack(false) { }
+Aimbot::Aimbot(bool isActive) : Hack(true) { }
 
 ViewAngles Aimbot::getAngles(Vector3& src, Vector3& dst)
 {
@@ -35,14 +36,13 @@ Entity* Aimbot::getBestTarget()
 	float tempDistanceFromPlayer = localPlayer->mPos.get3DDistance(closestEnt->mPos);
 	int maxPlayers = Engine::getMaxPlayers();
 
+	/* -1 because server counts lp as a player and lp isnt in the ent list */
 	for (int index = 0; index < maxPlayers - 1; index++)
 	{
 		Entity* currentEnt = entityList->Entities[index];
 		float distanceFromPlayer = localPlayer->mPos.get3DDistance(currentEnt->mPos);
 
-		std::cout << "INDEX " << index << std::endl;
-
-		if (currentEnt->mHealth <= 0)
+		if ( !(currentEnt && currentEnt->mHealth > 0) )
 			continue;
 
 		if (distanceFromPlayer < tempDistanceFromPlayer)
@@ -59,6 +59,13 @@ Entity* Aimbot::getBestTarget()
 
 void Aimbot::execute() 
 {
+	if (!isActive())
+		return;
+
+	/* Checking to see if player is in a valid game */
+	if (Engine::getEntityList() == nullptr)
+		return;
+
 	Entity* localPlayer = Engine::getLocalPlayer();
 	Entity* target = getBestTarget();
 

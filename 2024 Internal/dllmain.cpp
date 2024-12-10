@@ -1,11 +1,9 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 
-#include "pch.h"
+#include <Windows.h>
+#include <iostream>
 
-#include "gamestructures.h"
-#include "offsets.h"
-#include "engine.h"
-#include "aimbot.h"
+#include "interface/engine.h"
 
 DWORD WINAPI Init(HMODULE hModule);
 
@@ -18,61 +16,29 @@ DWORD WINAPI Init(HMODULE hModule)
     FILE* f;
     freopen_s(&f, "CONOUT$", "w", stdout);
 
-    Engine::initializeEngine();
-
-    Entity* localPlayer = Engine::getLocalPlayer();
-
-    /* Toggles */
-    bool bAimBot = false;
-    bool bHealth = false;
-
-    while (!GetAsyncKeyState(VK_END) & 1)
+    /* Initializes the moduleBase */
+    if (!Engine::initializeEngine())
     {
+        cout << "[!] See ya!" << endl;
+        Sleep(5000);
 
-        if (GetAsyncKeyState(VK_F1) & 1)
-        {
-            bHealth = !bHealth;
+        fclose(f);
+        FreeConsole();
+        FreeLibraryAndExitThread(hModule, 0);
 
-            if (bHealth)
-            {
-                std::cout << "health :: [on]\n";
-            }
-
-            else
-            {
-                std::cout << "health :: [off]\n";
-            }
-        }
-
-        if (GetAsyncKeyState(VK_F2) & 1)
-        {
-
-            bAimBot = !bAimBot;
-
-            if (bAimBot)
-            {
-                std::cout << "aimbot :: [on]\n";
-            }
-
-            else
-            {
-                std::cout << "aimbot :: [off]\n";
-            }
-        }
-
-
-        if (bHealth)
-        {
-            localPlayer->mHealth = 7777;
-            localPlayer->mCurrentWeaponAmmo = 7777;
-        }
-
-        if (bAimBot)
-        {
-            Aimbot::execute();
-        }
+        return 0;
     }
 
+    /* SwapBuffers Hook */
+    Engine::initializeHooks();
+
+
+    //while (!GetAsyncKeyState(VK_END)) { }
+    while (true) { } /* doesnt exit thread due to a bug */
+
+    cout << "[i] Unhooking." << endl;
+
+    Engine::unhook();
 
     fclose(f);
     FreeConsole();
@@ -90,4 +56,5 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     }
 
     return TRUE;
+
 }

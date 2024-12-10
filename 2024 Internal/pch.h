@@ -13,9 +13,9 @@
 #include <iostream>
 #include <Windows.h>
 
-#include "gamestructures.h"
-#include "vectors.h"
-#include "offsets.h"
-#include "engine.h"
+#include "memory/gamestructures.h"
+#include "memory/vectors.h"
+#include "memory/offsets.h"
+#include "interface/engine.h"
 
 #endif //PCH_H

@@ -24,6 +24,7 @@
     <ProjectGuid>{fd5027e0-a401-4f7c-84eb-b671aee4aa99}</ProjectGuid>
     <RootNamespace>My2024Internal</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Assault Cube Internal</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,8 +77,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;MY2024INTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,8 +95,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;MY2024INTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,8 +113,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;MY2024INTERNAL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,19 +143,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="aimbot.h" />
-    <ClInclude Include="engine.h" />
-    <ClInclude Include="gamestructures.h" />
+    <ClInclude Include="hacks\aimbot.h" />
+    <ClInclude Include="hacks\esp.h" />
+    <ClInclude Include="hacks\hack.h" />
+    <ClInclude Include="interface\engine.h" />
+    <ClInclude Include="memory\gamestructures.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="offsets.h" />
+    <ClInclude Include="memory\mem.h" />
+    <ClInclude Include="memory\offsets.h" />
+    <ClInclude Include="opengl draw\glDraw.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="vectors.h" />
+    <ClInclude Include="memory\vectors.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aimbot.cpp" />
+    <ClCompile Include="hacks\aimbot.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="hacks\esp.cpp" />
+    <ClCompile Include="hacks\hack.cpp" />
+    <ClCompile Include="interface\engine.cpp" />
+    <ClCompile Include="memory\mem.cpp" />
+    <ClCompile Include="opengl draw\glDraw.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
