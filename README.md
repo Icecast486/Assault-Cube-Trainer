@@ -35,6 +35,7 @@ After injecting the DLL, use the following keys to control the trainer:
 - **F1**: Activates Godmode.
 - **F2**: Enables Infinite Ammo.
 - **F3**: Toggles Aimbot.
+- **F4**: Toggles ESP.
 
 ## 🌎 Future Plans
 - **imGUI Implementation:** Fully functional user interface instead of console window.
