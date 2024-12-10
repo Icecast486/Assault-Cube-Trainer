@@ -39,6 +39,5 @@ After injecting the DLL, use the following keys to control the trainer:
 
 ## 🌎 Future Plans
 - **imGUI Implementation:** Fully functional user interface instead of console window.
-- **ESP/Wallhack:** Box, Health, Ammo esp.
 - **FOV Based AimBot:** Aimbot that targets based on FOV of local player.
 - **Other Features:** Infinite Armor, Infinite Weapon Damage, Silent Aim.
