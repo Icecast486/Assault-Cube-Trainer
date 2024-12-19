@@ -1,23 +1,33 @@
 #include <iostream>
 #include <Windows.h>
 #include <stdexcept>
+#include <iomanip>
 
 #include "engine.h"
 #include "../hacks/esp.h"
 #include "../memory/offsets.h"
 
+/* 
+	This is where is goes down!!! :O
 
+	TRANCELINE FUNCTION 0x004CA250
+*/
 
-namespace Test
+namespace Features
 {
 	inline Aimbot* aimbot;
+	inline ESP* esp;
 }
+
+
 
 bool Engine::initializeEngine()
 {
 	std::cout << "[i] Initializing Engine..." << std::endl;
 
 	moduleBase = (uintptr_t)GetModuleHandle(L"ac_client.exe");
+
+
 
 	if (moduleBase == NULL)
 	{
@@ -29,105 +39,84 @@ bool Engine::initializeEngine()
 	localPlayer = *(Entity**)(moduleBase + OFFSET_LOCALENT);
 	entityList = *(EntityList**)(moduleBase + OFFSET_ENTLIST);
 	maxPlayers = *(int*)(moduleBase + OFFSET_MAXPLAYERS);
-	viewMatrix = (float*)(moduleBase + OFFSET_VIREMATRIX);
+	viewMatrix = (float*)(moduleBase + OFFSET_VIEWMATRIX);
 
 	if (localPlayer == nullptr)
 	{
 		std::cout << "[!] LocalPlayer not found, aborting!" << std::endl;
 		return false;
 	}
-	
-	
-	if (entityList == nullptr)
-	{
-		std::cout << "[!] EntityList not found, aborting!" << std::endl;
-		std::cout << "[i] Make sure you're in a game when injecting!" << std::endl;
-		return false;
-	}
-	
-	
-	if (viewMatrix == nullptr)
-	{
-		std::cout << "[!] ViewMatrix not found, aborting!" << std::endl;
-		return false;
-	}
 
 	/* Initializing Hacks */
-	Test::aimbot = new Aimbot;
+	Features::aimbot = new Aimbot;
+	Features::esp = new ESP;
 
 	std::cout << "[i] Initialized Engine!" << std::endl;
 
 	return true;
 }
-
-
 bool Engine::addHook(const char* exportName, const char* modName, BYTE* dst, BYTE* PtrToGatewayFnPtr, size_t len)
 {
-	Hook newHook{ exportName, modName, dst, PtrToGatewayFnPtr, len };
+	Hook* newHook = new Hook{ exportName, modName, dst, PtrToGatewayFnPtr, len };
 	hooks.emplace_back(newHook);
 	return true;
 }
-
-
-bool Engine::addHook(Hook& newHook)
+bool Engine::addHook(Hook* newHook)
 {
 	hooks.emplace_back(newHook);
 	return true;
 }
+bool Engine::unhook()
+{
+	/* deleting features */
+	delete Features::aimbot;
+	delete Features::esp;
 
+	for (Hook* h : hooks) {
+		h->Disable();
+		delete h;
+	}
 
+	return true;
+}
 bool Engine::initializeHooks()
 {
 	/* hook som functions :O */
 	Engine::addHook("wglSwapBuffers", "opengl32.dll", (BYTE*)hkwglSwapBuffers, (BYTE*)&Engine::wglSwapBuffersGateway, 5);
 
-	for (Hook& h : hooks)
-		h.Enable();
+	for (Hook* h : hooks) {
+		h->Enable();
+	}
 
 	return true;
 }
-
 
 Entity* Engine::getLocalPlayer()
 {
 	if (localPlayer == nullptr)
 	{
-		std::cout << "[!] LocalPlayer not found, aborting!" << std::endl;
-		return nullptr;
+		localPlayer = *(Entity**)(moduleBase + OFFSET_LOCALENT);
+		std::cout << "[!] LocalPlayer not found, trying to get it.." << std::endl;
+		return localPlayer;
 	}
 
 	return localPlayer;
 }
-
-
 int Engine::getMaxPlayers()
 {
+	maxPlayers = *(int*)(moduleBase + OFFSET_MAXPLAYERS);
 	return maxPlayers;
 }
-
 float* Engine::getViewMatrix()
 {
+	viewMatrix = (float*)(moduleBase + OFFSET_VIEWMATRIX);
 	return viewMatrix;
 }
-
-
 EntityList* Engine::getEntityList()
 {
+	entityList = *(EntityList**)(moduleBase + OFFSET_ENTLIST);
 	return entityList;
 }
-
-
-bool Engine::unhook()
-{
-	for (Hook& h : hooks)
-		h.Disable();
-
-	/* deleting cheats */
-	delete Test::aimbot;
-
-	return true;
-}
-
 
 
 void Draw()
@@ -135,9 +124,6 @@ void Draw()
 	GL::Font glFont;
 	const int FONT_HEIGHT = 15;
 	const int FONT_WIDTH = 9;
-
-	const char* example = "ESP Box";
-	const char* example2 = "Why Would I crash?";
 
 	HDC currentHDC = wglGetCurrentDC();
 
@@ -147,11 +133,9 @@ void Draw()
 		glFont.Build(FONT_HEIGHT);
 	}
 
-	ESP esp;
-
 	GL::SetUpOrtho();
 
-	esp.Draw(glFont);
+	Features::esp->Draw(glFont);
 
 	GL::RestoreGL();
 }
@@ -196,9 +180,15 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	
 	if (GetAsyncKeyState(VK_F3) & 1)
 	{
-		Test::aimbot->toggle();
+		Features::aimbot->toggle();
 
-		if (Test::aimbot->isActive())
+		if (Engine::getEntityList() == nullptr)
+		{
+			std::cout << "[!] You need to enter a game to enable aimbot!" << std::endl;
+			Features::aimbot->toggle();
+		}
+
+		if (Features::aimbot->isActive())
 		{
 			cout << "[ACTIVE] Aimbot activated!" << endl;
 		}
@@ -212,6 +202,12 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	{
 		bESP = !bESP;
 
+		if (Engine::getEntityList() == nullptr)
+		{
+			std::cout << "[!] You need to enter a game to enable ESP!" << std::endl;
+			bESP = false;
+		}
+
 		if (bESP)
 		{
 			cout << "[ACTIVE] ESP activated!" << endl;
@@ -222,22 +218,21 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 		}
 	}
 
-	if (Test::aimbot->isActive())
+	if (Features::aimbot->isActive())
 	{
-		Test::aimbot->execute();
+		Features::aimbot->execute();
 	}
 
 	if (bGodMode)
 	{
-		localPlayer->mHealth = 7777;
+		localPlayer->iHealth = 7777;
 	}
 
 	if (bInfiniteAmmo)
 	{
-		localPlayer->mCurrentWeaponAmmo = 7777;
-		localPlayer->mCurrentWeaponReserve = 7777;
+		*(int*)localPlayer->pCurretnWeapon->pClip = 999999;
 	}
-	
+
 	if (bESP)
 	{
 		Draw();

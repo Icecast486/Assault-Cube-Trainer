@@ -28,49 +28,80 @@ bool worldToScreen(Vector3 pos, Vector3& screen, float* matrix, int windowWidth,
 
 void ESP::DrawESPBox(Entity* e, Vector3& screen, GL::Font& font, const GLubyte* color)
 {
-	//const GLubyte* color = nullptr;
-
-	/* check for team game (not implemented) */
 	Entity* localPlayer = Engine::getLocalPlayer();
 
-	//color = rgb::red;
 
-	float dist = localPlayer->mPos.get3DDistance(e->mPos);
+	float dist = localPlayer->vPosition.get3DDistance(e->vPosition);
 
 	float scale = (GAME_UNIT_MAGIC / dist) * (viewport[2] / VIRTUAL_SCREEN_WIDTH);
 	float x = screen.x - scale;
 	float y = screen.y - scale * PLAYER_ASPECT_RATIO;
 
-	
+	float x2 = (screen.x + 7) + scale;					/* location of the health bar relative to the box */
+
 	float width = scale * 2;
 	float height = scale * PLAYER_ASPECT_RATIO * 2;
 
-	GL::DrawOutline(x, y, width, height, 0.2f, color);
-
-	float textX = font.centerText(x, width, strlen(e->mEntityName) * ESP_FONT_WIDTH);
+	float textX = font.centerText(x, width, strlen(e->pEntityName) * ESP_FONT_WIDTH);
 	float textY = y - ESP_FONT_HEIGHT / 2;
 
-	font.Print(textX, textY, color, "%s", e->mEntityName);
+
+	/* HEALTH BAR COLOR */
+	const float healthFrac = e->iHealth * 0.01f;
+	GLubyte healthColor[3] = { 
+		255 * (1 - healthFrac), 
+		(255 * healthFrac), 
+		0 
+	};
+
+	font.Print(textX, textY, color, "%s", e->pEntityName);
+
+	/* Drawing health bar */
+	GL::DrawFillRect(x2, y + height - (height * e->iHealth / 100), 2.0f, height * e->iHealth / 100, healthColor);
+	GL::DrawOutline(x2, y, 2.0f, height,  0.5f / scale, color, true);
+	
+	/* Drawing the box */
+	GL::DrawOutline(x, y, width, height, 0.2f, color, true);
 
 }
 
 
+/* NEED TO CHECK WHETER ITS A TEAM GAME OR NOT!!! */
 
 void ESP::Draw(GL::Font& font)
 {
 	glGetIntegerv(GL_VIEWPORT, viewport);
-	
 
 	for (int i = 0; i < Engine::getMaxPlayers() - 1; i++)
 	{
-		const GLubyte* color = rgb::red;
+		int iLPTeamNum = Engine::getLocalPlayer()->iTeamNum;
+		const GLubyte* color = nullptr;
+
 		Entity* e = Engine::getEntityList()->Entities[i];
-		Vector3 center = e->mHeadPos;
+		
+		if (e == nullptr || Engine::getEntityList() == nullptr)
+		{
+			std::cout << "[!] Either the entitylist or player is a nullptr!" << std::endl;
+			continue;
+		}
+
+		Vector3 center = e->vHeadPos;						
 		center.z = center.z - EYE_HEIGHT + PLAYER_HEIGHT / 2;
+		
+		//if (iLPTeamNum != e->iTeamNum)
+		//{
+		//	
+		//	
+		//}
 
-		if (e->mHealth < 1)
-			color = rgb::gray;
+		color = rgb::lightgray;
 
+		/*
+		if (e->bIsDead)
+		{
+			return;
+		}
+		*/
 		Vector3 screenCoords;
 
 		if (worldToScreen(center, screenCoords, Engine::getViewMatrix(), viewport[2], viewport[3]))

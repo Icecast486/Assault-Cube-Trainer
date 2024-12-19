@@ -39,17 +39,37 @@ void GL::DrawFillRect(float x, float y, float width, float height, const GLubyte
 
 
 
-void GL::DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3])
+void GL::DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3], bool outline)
 {
 	glLineWidth(lineWidth);
 	glBegin(GL_LINE_STRIP);
-	glColor3ub(color[0], color[1], color[2]);
-	glVertex2f(x - 0.5f, y - 0.5f);
+	glColor3ub(color[0], color[1], color[2]); /* error getting color */
+	glVertex2f(x - .5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y + height + 0.5f);
 	glVertex2f(x - 0.5f, y + height + 0.5f);
 	glVertex2f(x - 0.5f, y - 0.5f);
+	
 	glEnd();
+
+	if (outline)
+	{
+		const GLubyte* col = rgb::black;
+		float offset = 1.6f;
+
+		/* draw black outline */
+		glLineWidth(lineWidth);
+		glBegin(GL_LINE_STRIP);
+		glColor3ub(col[0], col[1], col[2]);
+		glVertex2f(x - offset, y - offset);
+		glVertex2f(x + width + offset, y - offset);
+		glVertex2f(x + width + offset, y + height + offset);
+		glVertex2f(x - offset, y + height + offset);
+		glVertex2f(x - offset, y - offset);
+
+
+		glEnd();
+	}
 }
 
 
@@ -63,7 +83,7 @@ void GL::Font::Build(int height)
 					-height, 0, 0, 0, FW_MEDIUM, FALSE, 
 					FALSE, FALSE, ANSI_CHARSET, OUT_TT_PRECIS, 
 					CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FF_DONTCARE | 
-					DEFAULT_PITCH, "Consolas"
+					DEFAULT_PITCH, "Consolas "
 				); /* mono spaced font */
 
 	HFONT hOldFont = (HFONT)SelectObject(hdc, hFont);
@@ -105,7 +125,7 @@ float GL::Font::centerText(float x, float width, float textWidth)
 	if (width > textWidth)
 	{
 		float difference = width - textWidth;
-		return (x + difference / 2);
+		return (x + (difference / 2));
 	}
 	else
 	{

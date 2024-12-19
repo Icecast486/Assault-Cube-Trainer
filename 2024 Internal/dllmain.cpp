@@ -29,9 +29,7 @@ DWORD WINAPI Init(HMODULE hModule)
         return 0;
     }
 
-    /* SwapBuffers Hook */
     Engine::initializeHooks();
-
 
     //while (!GetAsyncKeyState(VK_END)) { }
     while (true) { } /* doesnt exit thread due to a bug */
@@ -52,7 +50,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH)
     {
-        CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Init, hModule, 0, 0));
+        const auto handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Init, hModule, 0, 0);
+
+        if (handle)
+        {
+            CloseHandle(handle);
+        }
     }
 
     return TRUE;

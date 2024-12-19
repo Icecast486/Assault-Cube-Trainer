@@ -28,31 +28,28 @@ Entity* Aimbot::getBestTarget()
 {
 	EntityList* entityList = Engine::getEntityList();
 	Entity* localPlayer = Engine::getLocalPlayer();
-	Entity* closestEnt = entityList->Entities[0];
+	Entity* closestEnt = nullptr;
 
-	if (closestEnt == nullptr)
-		return nullptr;
-
-	float tempDistanceFromPlayer = localPlayer->mPos.get3DDistance(closestEnt->mPos);
+	float tempDistanceFromPlayer = -1.0f;
 	int maxPlayers = Engine::getMaxPlayers();
 
 	/* -1 because server counts lp as a player and lp isnt in the ent list */
 	for (int index = 0; index < maxPlayers - 1; index++)
 	{
 		Entity* currentEnt = entityList->Entities[index];
-		float distanceFromPlayer = localPlayer->mPos.get3DDistance(currentEnt->mPos);
-
-		if ( !(currentEnt && currentEnt->mHealth > 0) )
+		// localPlayer->iTeamNum == currentEnt->iTeamNum
+		if (!currentEnt || currentEnt->bIsDead)
 			continue;
 
-		if (distanceFromPlayer < tempDistanceFromPlayer)
+		float distanceFromPlayer = localPlayer->vPosition.get3DDistance(currentEnt->vPosition);
+
+		if (distanceFromPlayer < tempDistanceFromPlayer || !closestEnt)
 		{
 			tempDistanceFromPlayer = distanceFromPlayer;
 			closestEnt = currentEnt;
 		}
-
 	}
-
+	
 	return closestEnt;
 }
 
@@ -72,6 +69,6 @@ void Aimbot::execute()
 	if (target == nullptr)
 		return;
 
-	localPlayer->mViewAngles = getAngles(localPlayer->mHeadPos, target->mHeadPos);
+	localPlayer->vViewAngles = getAngles(localPlayer->vHeadPos, target->vHeadPos);
 }
 

@@ -28,7 +28,7 @@ namespace GL
 	void RestoreGL();
 
 	void DrawFillRect(float x, float y, float width, float height, const GLubyte color[3]);
-	void DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3]);
+	void DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3], bool outline);
 
 
 	class Font

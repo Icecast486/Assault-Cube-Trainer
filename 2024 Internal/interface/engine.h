@@ -1,11 +1,12 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <vector>
 #include "../memory/gamestructures.h"
 #include "../memory/mem.h"
 #include "../opengl draw/glDraw.h"
 #include "../hacks/aimbot.h"
-#include <vector>
+#include "../hacks/esp.h"
 
 /* Engine is the brain of the cheat.. */
 
@@ -16,11 +17,11 @@ namespace Engine
 	typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
 
 	inline twglSwapBuffers wglSwapBuffersGateway;  /* the gateway to run stolen bytes */
-	inline twglSwapBuffers wglSwapBuffers;         /* the original SwapBuffers */
+	//inline twglSwapBuffers wglSwapBuffers;         /* the original SwapBuffers */
 
 
 	inline uintptr_t moduleBase;
-	inline std::vector<Hook> hooks;
+	inline std::vector<Hook*> hooks;
 
 	/* Game Structures */
 	inline Entity* localPlayer;
@@ -28,12 +29,11 @@ namespace Engine
 	inline int maxPlayers;
 	inline float* viewMatrix;
 
-
 	bool initializeEngine();
 	bool initializeHooks();
 
 	bool addHook(const char* exportName, const char* modName, BYTE* dst, BYTE* PtrToGatewayFnPtr, size_t len);
-	bool addHook(Hook& newHk);
+	bool addHook(Hook* newHk);
 
 	Entity* getLocalPlayer();
 	EntityList* getEntityList();

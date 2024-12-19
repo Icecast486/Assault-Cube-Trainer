@@ -20,7 +20,6 @@ class ESP
 {
 public:
 	int viewport[4];
-
 	void DrawESPBox(Entity* e, Vector3& screen, GL::Font&, const GLubyte* color);
 	void Draw(GL::Font& font);
 };

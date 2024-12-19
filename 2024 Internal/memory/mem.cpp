@@ -58,7 +58,10 @@ BYTE* Mem::TrampHook32(BYTE* src, BYTE* dst, size_t len)
 	if (len < 5)
 		return 0;
 
-	BYTE* gateway = (BYTE*)VirtualAlloc(0, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	BYTE* gateway = (BYTE*)VirtualAlloc(nullptr, len, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+	if (gateway == nullptr)
+		return nullptr;
 
 	memcpy_s(gateway, len, src, len);
 
@@ -94,6 +97,14 @@ void Hook::Enable()
 {
 	memcpy(originalBytes, src, len);
 	*(uintptr_t*)PtrToGatewayFnPtr = (uintptr_t)Mem::TrampHook32(src, dst, len); /* returns the memory location of the gateway */
+
+	if (PtrToGatewayFnPtr == nullptr)
+	{
+		std::cout << "TF AHPPNED HERE!!" << std::endl;
+		return;
+	}
+
+	std::cout << "[i] Created gateway at address [0x" << &PtrToGatewayFnPtr << "]" << std::endl;
 	bStatus = true;
 }
 
@@ -102,7 +113,6 @@ void Hook::Enable()
 void Hook::Disable()
 {	
 	Mem::patch(src, originalBytes, len);
-	//VirtualFree(dst, len, MEM_DECOMMIT);
 	bStatus = false;
 }
 
