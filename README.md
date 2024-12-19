@@ -41,3 +41,6 @@ After injecting the DLL, use the following keys to control the trainer:
 - **imGUI Implementation:** Fully functional user interface instead of console window.
 - **FOV Based AimBot:** Aimbot that targets based on FOV of local player.
 - **Other Features:** Infinite Armor, Infinite Weapon Damage, Silent Aim.
+
+## 📸 Screen Shots
+![Screenshot 2024-12-19 010819](https://github.com/user-attachments/assets/a49faf8e-c01a-4808-aa1d-7b34c4c39780)
