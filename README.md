@@ -42,9 +42,9 @@ After injecting the DLL, use the following keys to control the trainer:
 - **FOV Based AimBot:** Aimbot that targets based on FOV of local player.
 - **Other Features:** Infinite Armor, Infinite Weapon Damage, Silent Aim.
 
-## 📸 Screen Shots
+## 📸 Screenshots
 
-Here are some scrrenshots of the visuals and the console window that appears.
+Here are some screenshots of the visuals and the console window that appears.
 
 ![Screenshot 2024-12-19 010819](https://github.com/user-attachments/assets/a49faf8e-c01a-4808-aa1d-7b34c4c39780)
 ![Screenshot 2024-12-19 011041](https://github.com/user-attachments/assets/a712062b-19b9-4e41-8e4f-f05502031781)
