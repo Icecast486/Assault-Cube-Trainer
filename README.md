@@ -1,7 +1,7 @@
 # Assault Cube Trainer x86
 This is an internal trainer for AssaultCube 1.3.0.2. This project is a way for me to practice my reverse engeneering 
 skills, using IDA PRO, cheat engine, re-class, and in addition keeping track of the changes I make 
-to the project.
+to the project. This project is for educational purposes only I do not condone cheating in videogames.
 
 ## 💉 DLL Injection Instructions
 
