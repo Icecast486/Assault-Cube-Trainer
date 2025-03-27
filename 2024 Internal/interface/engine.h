@@ -2,50 +2,54 @@
 #define ENGINE_H
 
 #include <vector>
+
 #include "../memory/gamestructures.h"
 #include "../memory/mem.h"
 #include "../opengl draw/glDraw.h"
 #include "../hacks/aimbot.h"
 #include "../hacks/esp.h"
+#include "../dependencies/minhook/include/MinHook.h"
 
 /* Engine is the brain of the cheat.. */
 
+BOOL __stdcall hkwglSwapBuffers(HDC hDc);
 
 namespace Engine
 {
-	/* Hook prototypes */
-	typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
-
-	inline twglSwapBuffers wglSwapBuffersGateway;  /* the gateway to run stolen bytes */
-	//inline twglSwapBuffers wglSwapBuffers;         /* the original SwapBuffers */
-
-
 	inline uintptr_t moduleBase;
-	inline std::vector<Hook*> hooks;
 
-	/* Game Structures */
+	/* ----------- Hook prototypes ------------ */
+	
+	typedef BOOL(__stdcall* twglSwapBuffers) (HDC hDc);
+	inline twglSwapBuffers owglSwapBuffers;
+
+	typedef int(__cdecl* tSDL_SetRelativeMouseMode) (int bUnlockCursor);
+	inline tSDL_SetRelativeMouseMode oSDL_SetRelativeMouseMode;
+	
+	/* ------------ Game Structures ------------ */
+
 	inline Entity* localPlayer;
 	inline EntityList* entityList;
 	inline int maxPlayers;
 	inline float* viewMatrix;
 
-	bool initializeEngine();
-	bool initializeHooks();
-
-	bool addHook(const char* exportName, const char* modName, BYTE* dst, BYTE* PtrToGatewayFnPtr, size_t len);
-	bool addHook(Hook* newHk);
-
 	Entity* getLocalPlayer();
 	EntityList* getEntityList();
 	int getMaxPlayers();
 	float* getViewMatrix();
-	
+
+	/* ----------- Utiliy functions ----------- */
+
+	bool initializeEngine();
+	bool initializeHooks();
 	bool unhook();
+
+	/* ------------ Hacks ------------ */
+
+	inline bool bGodMode = false;
+	inline bool bInfiniteAmmo = false;
+	inline bool aimbot = false;
+	inline bool bESP = false;
 };
-
-
-/* swapbuffers stuff */
-BOOL __stdcall hkwglSwapBuffers(HDC hDc);
-void Draw();
 
 #endif

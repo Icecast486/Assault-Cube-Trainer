@@ -16,10 +16,15 @@ const float PLAYER_ASPECT_RATIO = PLAYER_HEIGHT / PLAYER_WIDTH;
 const int ESP_FONT_HEIGHT = 15;
 const int ESP_FONT_WIDTH = 9;
 
-class ESP
+namespace esp
 {
-public:
-	int viewport[4];
-	void DrawESPBox(Entity* e, Vector3& screen, GL::Font&, const GLubyte* color);
+	inline int viewport[4];
+	inline bool bIsActive;
+
+	inline bool bESP = false;
+
 	void Draw(GL::Font& font);
-};
+	void DrawESPBox(Entity* e, Vector3& screen, GL::Font& font, const GLubyte* color);
+
+	void BeginESPDraw();
+}

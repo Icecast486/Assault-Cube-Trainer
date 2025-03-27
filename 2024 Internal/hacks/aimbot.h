@@ -3,16 +3,14 @@
 
 #include "../memory/vectors.h"
 #include "../interface/engine.h"
-#include "hack.h"
 
-class Aimbot : public Hack
+namespace aimbot
 {
-public:
-	Aimbot();
-	Aimbot(bool isActive);
+	inline bool bIsActive;
+
 	ViewAngles getAngles(Vector3& src, Vector3& dst);
 	Entity* getBestTarget();
 	void execute();
-};
+}
 
 #endif !AIMBOT_H

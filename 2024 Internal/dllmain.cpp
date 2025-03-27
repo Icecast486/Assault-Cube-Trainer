@@ -31,15 +31,12 @@ DWORD WINAPI Init(HMODULE hModule)
 
     Engine::initializeHooks();
 
-    //while (!GetAsyncKeyState(VK_END)) { }
-    while (true) { } /* doesnt exit thread due to a bug */
+    //while (true) {  }
+    while (!GetAsyncKeyState(VK_END)) {  }
 
     cout << "[i] Unhooking." << endl;
 
-    Engine::unhook();
-
     fclose(f);
-    FreeConsole();
     FreeLibraryAndExitThread(hModule, 0);
 
     return 0;
@@ -48,14 +45,21 @@ DWORD WINAPI Init(HMODULE hModule)
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH)
+    switch (ul_reason_for_call)
     {
-        const auto handle = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Init, hModule, 0, 0);
-
-        if (handle)
+    case DLL_PROCESS_ATTACH:
+    {
+        HANDLE Thread = CreateThread(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(Init), hModule, NULL, NULL);
+        if (Thread)
         {
-            CloseHandle(handle);
+            CloseHandle(Thread);
         }
+        break;
+    }
+    case DLL_PROCESS_DETACH:
+        Engine::unhook();
+        FreeConsole();
+        break;
     }
 
     return TRUE;
