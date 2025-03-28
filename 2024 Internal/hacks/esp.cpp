@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include "esp.h"
+#include "../menu/menu.h"
 
 bool worldToScreen(Vector3 pos, Vector3& screen, float* matrix, int windowWidth, int windowHeight)
 {
@@ -103,13 +104,21 @@ void esp::DrawESPBox(Entity* e, Vector3& screen, GL::Font& font, const GLubyte* 
 		0
 	};
 
-	font.Print(textX, textY, color, "%s", e->pEntityName);
+	if (menu::bNameEsp)
+	{
+		font.Print(textX, textY, color, "%s", e->pEntityName);
+	}
 
 	/* Drawing health bar */
-	GL::DrawFillRect(x, y + height - (height * e->iHealth / 100), 2.0f, height * e->iHealth / 100, healthColor);
-	
+	if (menu::bHealthEsp)
+	{
+		GL::DrawOutline(x2, y, 2.0f, height, 0.5f / scale, color, true);
+		GL::DrawFillRect(x2, y + height - (height * e->iHealth / 100), 2.0f, height * e->iHealth / 100, healthColor);
+	}
 
 	/* Drawing the box */
-	//GL::DrawOutline(x2, y, 2.0f, height, 0.5f / scale, color, true);
-	//GL::DrawOutline(x, y, width, height, 0.2f, color, true);
+	if (menu::bBoxEsp) 
+	{
+		GL::DrawOutline(x, y, width, height, 0.2f, color, true);
+	}
 }

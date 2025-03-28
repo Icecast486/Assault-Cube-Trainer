@@ -5,8 +5,6 @@
 
 #include "interface/engine.h"
 
-DWORD WINAPI Init(HMODULE hModule);
-
 
 DWORD WINAPI Init(HMODULE hModule)
 {
@@ -31,8 +29,7 @@ DWORD WINAPI Init(HMODULE hModule)
 
     Engine::initializeHooks();
 
-    //while (true) {  }
-    while (!GetAsyncKeyState(VK_END)) {  }
+    while (true) {  }
 
     cout << "[i] Unhooking." << endl;
 

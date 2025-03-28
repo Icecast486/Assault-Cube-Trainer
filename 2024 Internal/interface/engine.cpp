@@ -10,7 +10,6 @@
 
 /* 
 	This is where is goes down!!! :O
-
 	TRANCELINE FUNCTION 0x004CA250
 */
 
@@ -87,15 +86,17 @@ bool Engine::initializeHooks()
 		return false;
 	}
 
+	oSDL_SetRelativeMouseMode = (tSDL_SetRelativeMouseMode)GetProcAddress(SDL2, "SDL_SetRelativeMouseMode");
+
 	MH_CreateHook(
 		GetProcAddress(OpenGL, "wglSwapBuffers"),
 		reinterpret_cast<LPVOID>(hkwglSwapBuffers),
 		reinterpret_cast<LPVOID*>(&Engine::owglSwapBuffers)
 	);
 
-	oSDL_SetRelativeMouseMode = (tSDL_SetRelativeMouseMode)GetProcAddress(SDL2, "SDL_SetRelativeMouseMode");
-
 	MH_EnableHook(MH_ALL_HOOKS);
+
+	menu::initialize();
 
 	return true;
 }
@@ -116,72 +117,13 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	using namespace std;
 
 	if (GetAsyncKeyState(VK_INSERT) & 1)
-	{
 		menu::toggle();
-	}
-
-	/* God mode */
-	if (GetAsyncKeyState(VK_F1) & 1)
-	{
-		menu::bGodMode = !menu::bGodMode;
-
-		if (menu::bGodMode)
-			cout << "[ACTIVE] Infinite Health activated!" << endl;
-
-		else
-			cout << "[DISABLE] Infinite Health  disabled!" << endl;
-	}	
-
-	/* Infinite Ammo */
-	if (GetAsyncKeyState(VK_F2) & 1)
-	{
-		menu::bInfiniteAmmo = !menu::bInfiniteAmmo;
-
-		if (menu::bInfiniteAmmo)
-			cout << "[ACTIVE] Infinite Ammo activated!" << endl;
-
-		else
-			cout << "[DISABLE] Infinite Ammo disabled!" << endl;
-	}
-	
-	/* Aimbot */
-	if (GetAsyncKeyState(VK_F3) & 1)
-	{
-		menu::bAimbot = !menu::bAimbot;
-
-		if (Engine::getEntityList() == nullptr)
-			std::cout << "[!] You need to enter a game to enable aimbot!" << std::endl;
-
-		if (menu::bAimbot)
-			cout << "[ACTIVE] Aimbot activated!" << endl;
-
-		else
-			cout << "[DISABLE] Aimbot disabled!" << endl;
-	}
-
-	/* ESP  */
-	if (GetAsyncKeyState(VK_F4) & 1)
-	{
-		menu::bEsp = !menu::bEsp;
-
-		if (Engine::getEntityList() == nullptr) {
-			std::cout << "[!] You need to enter a game to enable ESP!" << std::endl;
-			menu::bEsp = false;
-		}
-
-		if (esp::bIsActive)
-			cout << "[ACTIVE] ESP activated!" << endl;
-
-		else
-			cout << "[DISABLE] ESP disabled!" << endl;
-	}
-
 
 	if (menu::bGodMode)
 		Engine::localPlayer->iHealth = 7777;
 	
 	if (menu::bInfiniteAmmo)
-		*(int*)Engine::localPlayer->pCurretnWeapon->pClip = 999999;
+		*(int*)Engine::localPlayer->pCurretnWeapon->pClip = 7777;
 	
 	if (menu::bEsp)
 		esp::BeginESPDraw();
@@ -189,9 +131,7 @@ BOOL __stdcall hkwglSwapBuffers(HDC hDc)
 	if (menu::bAimbot)
 		aimbot::execute();
 
-	menu::initialize(hDc);
-	menu::startMenu(hDc);
-
+	menu::startMenu();
 
 	return Engine::owglSwapBuffers(hDc);
 }

@@ -1,42 +1,44 @@
 #include "menu.h"
 
 
+LRESULT CALLBACK hkWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 void menu::toggle()
 {
-    menu::isOpen = !menu::isOpen;
-
+    menu::bIsOpen = !menu::bIsOpen;
     ImGuiIO& io = ImGui::GetIO();
 
-    io.WantCaptureMouse = menu::isOpen;
-    io.WantCaptureKeyboard = menu::isOpen;
-    io.MouseDrawCursor = menu::isOpen;
-    Engine::oSDL_SetRelativeMouseMode(!menu::isOpen); /* unlock that mouse */
+    io.WantCaptureMouse = menu::bIsOpen;
+    io.WantCaptureKeyboard = menu::bIsOpen;
+    io.MouseDrawCursor = menu::bIsOpen;
+
+    Engine::oSDL_SetRelativeMouseMode(!menu::bIsOpen); /* unlock that mouse */
 }
 
 
-void menu::initialize(HDC hDc)
+void menu::initialize()
 {
-    if (!initialized)
+    if (!bInitialized)
     {
         // Initialize ImGui context
         ImGui::CreateContext();
-        io = ImGui::GetIO();
+        ImGuiIO& io = ImGui::GetIO();
 
-        HWND hwnd = WindowFromDC(hDc);
+        menu::gameWindow = FindWindowA(NULL, "AssaultCube");
+        menu::origionalWindowProc = (WNDPROC)SetWindowLongPtr(menu::gameWindow, GWLP_WNDPROC, (LONG_PTR)hkWndProc);
 
-        ImGui_ImplWin32_Init(hwnd);
+        ImGui_ImplWin32_Init(menu::gameWindow);
         ImGui_ImplOpenGL2_Init();
         ImGui::StyleColorsDark();
 
-        //ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
 
-        initialized = true;
+        bInitialized = true;
     }
 }
 
-void menu::startMenu(HDC hDc)
+void menu::startMenu()
 {
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplWin32_NewFrame();
@@ -50,34 +52,106 @@ void menu::startMenu(HDC hDc)
 
 void menu::render()
 {
-    if (menu::isOpen)
+    if (menu::bIsOpen)
     {
         ImGui::SetNextWindowSize(ImVec2(400, 300));
         ImGui::Begin("AssaultCube Trainer - OpenGL");
 
-        ImGui::Separator();
-        ImGui::Text("Player");
-        ImGui::Checkbox("GodMod", &bGodMode);
-        ImGui::Checkbox("Infinite Ammo", &bInfiniteAmmo);
+        if (ImGui::BeginTabBar("Tabs")) /* Begin Tab Bar */
+        {
 
-        ImGui::Separator();
-        ImGui::Text("Aim");
-        ImGui::Checkbox("Aimbot", &bAimbot);
+            
+            if (ImGui::BeginTabItem("Player"))
+            {
+                ImGui::SeparatorText("Player");
+                ImGui::Checkbox("God Mode", &menu::bGodMode);
+                ImGui::Checkbox("Infinite Ammo", &menu::bInfiniteAmmo);
+                ImGui::EndTabItem();
+            }
 
-        ImGui::Separator();
-        ImGui::Text("Visuals");
-        ImGui::Checkbox("ESP", &bEsp);
+
+            if (ImGui::BeginTabItem("Aim"))
+            {
+                ImGui::SeparatorText("Aim");
+                ImGui::Checkbox("Aimbot", &menu::bAimbot);
+                ImGui::EndTabItem();
+            }
+
+
+            if (ImGui::BeginTabItem("Visuals"))
+            {
+                ImGui::SeparatorText("Visuals");
+                ImGui::Checkbox("ESP", &bEsp);
+
+                if (menu::bEsp) 
+                {
+                    ImGui::Checkbox("Box", &menu::bBoxEsp);
+                    ImGui::Checkbox("Health", &menu::bHealthEsp);
+                    ImGui::Checkbox("Name", &menu::bNameEsp);
+                }
+
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Game"))
+            {
+                ImGui::SeparatorText("Game");
+                ImGui::Text("Not Yet Implemented");
+
+                ImGui::EndTabItem();
+            }
+            
+            
+            if (ImGui::BeginTabItem("Misc"))
+            {
+                ImGui::SeparatorText("Miscellaneous");
+                ImGui::Text("Not Yet Implemented");
+
+                ImGui::EndTabItem();
+            }
+
+            if (ImGui::BeginTabItem("Credits"))
+            {
+                ImGui::SeparatorText("Assault Cube Trainer x86");
+                ImGui::LabelText("Icecast486", "Developer: ");
+
+                ImGui::SeparatorText("Tanks :)");
+                ImGui::Text("Thanks to Guided Hacking for giving me the knowledge\ntodo all of this!");
+
+                ImGui::SeparatorText("https://github.com/Icecast486");
+
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar(); /* End Of Tab Bar */
+        }
 
         ImGui::End();
     }
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-
+/* Ignore user input in the assult cube process */
 LRESULT CALLBACK hkWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 {
-    if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
-        return true;
+    if (menu::bIsOpen)
+    {
+        if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+            return 0;
 
-    return CallWindowProc(oWndProc, hwnd, uMsg, wParam, lParam);
+        switch (uMsg) {
+        case WM_KEYDOWN:
+        case WM_KEYUP:
+        case WM_CHAR:
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP:
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP:
+            return 0;
+        }
+    }
+
+    return CallWindowProc(menu::origionalWindowProc, hwnd, uMsg, wParam, lParam);
 }

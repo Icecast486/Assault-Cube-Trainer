@@ -11,19 +11,25 @@
 
 namespace menu
 {
-	inline bool isOpen;
-	inline bool initialized;
+	inline WNDPROC origionalWindowProc;
+	inline HWND gameWindow;
+	
+
+	inline bool bIsOpen;
+	inline bool bInitialized;
 
 	inline bool bGodMode;
 	inline bool bInfiniteAmmo;
 	inline bool bAimbot;
-	inline bool bEsp;
 
-	inline ImGuiIO& io;
+	inline bool bEsp;
+	inline bool bBoxEsp;
+	inline bool bHealthEsp;
+	inline bool bNameEsp;
 
 	void toggle();
-	void initialize(HDC hDc);
-    void startMenu(HDC hDc);
+	void initialize();
+    void startMenu();
 	void render();
 } 
 

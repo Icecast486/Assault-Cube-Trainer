@@ -17,7 +17,7 @@ ViewAngles aimbot::getAngles(Vector3& src, Vector3& dst)
 
 	angles = ViewAngles();
 	angles.pitch = asin(delta.z / hypLen) * 180 / PI;
-	angles.yaw = (-atan2(delta.x, delta.y) * 180 / PI) + 180; /* +180 becase yaw in AS is 1-360 */
+	angles.yaw = (-atan2(delta.x, delta.y) * 180 / PI) + 180; /* +180 becase yaw in AC is 1-360 */
 
 	return angles;
 }
@@ -59,17 +59,15 @@ Entity* aimbot::getBestTarget()
 /* This gets executed in a loop to trigger aimbot logic */
 void aimbot::execute()
 {
-	if (!bIsActive)
-		return;
-
 	/* Checking to see if player is in a valid game */
 	if (Engine::getEntityList() == nullptr)
 		return;
 
+	Entity* localPlayer = Engine::getLocalPlayer();
 	Entity* target = getBestTarget();
 
-	if (target == nullptr)
+	if (target == nullptr || localPlayer == nullptr)
 		return;
 
-	Engine::localPlayer->vViewAngles = getAngles(Engine::localPlayer->vHeadPos, target->vHeadPos);
+	localPlayer->vViewAngles = getAngles(localPlayer->vHeadPos, target->vHeadPos);
 }
