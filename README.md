@@ -31,14 +31,9 @@ To use the internal trainer, follow these steps to inject the DLL into the targe
 
 After injecting the DLL, use the following keys to control the trainer:
 
-- **END**: Uninject the cheat and stop the trainer.
-- **F1**: Activates Godmode.
-- **F2**: Enables Infinite Ammo.
-- **F3**: Toggles Aimbot.
-- **F4**: Toggles ESP.
+- **INSERT**: Toggle Cheat Menu
 
 ## 🌎 Future Plans
-- **imGUI Implementation:** Fully functional user interface instead of console window.
 - **FOV Based AimBot:** Aimbot that targets based on FOV of local player.
 - **Other Features:** Infinite Armor, Infinite Weapon Damage, Silent Aim.
 
