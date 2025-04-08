@@ -161,6 +161,7 @@
     <ClInclude Include="dependencies\minhook\src\trampoline.h" />
     <ClInclude Include="hacks\aimbot.h" />
     <ClInclude Include="hacks\esp.h" />
+    <ClInclude Include="hacks\game.h" />
     <ClInclude Include="interface\engine.h" />
     <ClInclude Include="memory\gamestructures.h" />
     <ClInclude Include="framework.h" />
@@ -187,6 +188,7 @@
     <ClCompile Include="hacks\aimbot.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hacks\esp.cpp" />
+    <ClCompile Include="hacks\game.cpp" />
     <ClCompile Include="interface\engine.cpp" />
     <ClCompile Include="memory\mem.cpp" />
     <ClCompile Include="menu\menu.cpp" />

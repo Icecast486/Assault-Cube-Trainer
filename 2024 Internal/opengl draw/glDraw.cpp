@@ -39,11 +39,11 @@ void GL::DrawFillRect(float x, float y, float width, float height, const GLubyte
 
 
 
-void GL::DrawOutline(float x, float y, float width, float height, float lineWidth, const GLubyte color[3], bool outline)
+void GL::DrawBox(float x, float y, float width, float height, float lineWidth, const GLubyte color[3], bool outline)
 {
 	glLineWidth(lineWidth);
 	glBegin(GL_LINE_STRIP);
-	glColor3ub(color[0], color[1], color[2]); /* error getting color */
+	glColor3ub(color[0], color[1], color[2]); 
 	glVertex2f(x - .5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y - 0.5f);
 	glVertex2f(x + width + 0.5f, y + height + 0.5f);
@@ -66,7 +66,6 @@ void GL::DrawOutline(float x, float y, float width, float height, float lineWidt
 		glVertex2f(x + width + offset, y + height + offset);
 		glVertex2f(x - offset, y + height + offset);
 		glVertex2f(x - offset, y - offset);
-
 
 		glEnd();
 	}

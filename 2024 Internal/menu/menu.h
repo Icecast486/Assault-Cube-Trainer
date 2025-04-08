@@ -18,14 +18,26 @@ namespace menu
 	inline bool bIsOpen;
 	inline bool bInitialized;
 
+	/* Player */
 	inline bool bGodMode;
 	inline bool bInfiniteAmmo;
+
+	/* Aimbot */
 	inline bool bAimbot;
 
+	/* Visuals */
 	inline bool bEsp;
 	inline bool bBoxEsp;
+	inline bool bAmmoEsp;
 	inline bool bHealthEsp;
 	inline bool bNameEsp;
+	inline bool bOutlineEsp;
+
+	/* Game */
+	inline bool bKill;
+
+	/* Misc */
+	inline bool bDebugMode;
 
 	void toggle();
 	void initialize();

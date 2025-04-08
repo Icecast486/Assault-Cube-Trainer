@@ -48,28 +48,28 @@ void esp::BeginESPDraw()
 
 void esp::Draw(GL::Font& font)
 {
+	int iLPTeamNum = Engine::getLocalPlayer()->iTeamNum;
+
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
 	for (int i = 0; i < Engine::getMaxPlayers() - 1; i++)
 	{
-		int iLPTeamNum = Engine::getLocalPlayer()->iTeamNum;
-		const GLubyte* color = nullptr;
-
 		Entity* e = Engine::getEntityList()->Entities[i];
+		Vector3 screenCoords;
+		Vector3 center = e->vHeadPos;
+		
+		const GLubyte* color = nullptr;
 
 		if (e == nullptr || Engine::getEntityList() == nullptr) {
 			std::cout << "[!] Either the entitylist or player is a nullptr!" << std::endl;
 			continue;
 		}
 
-		Vector3 center = e->vHeadPos;
 		center.z = center.z - EYE_HEIGHT + PLAYER_HEIGHT / 2;
 		color = rgb::lightgray;
 
 		if (e->bIsDead)
 			color = rgb::red;
-
-		Vector3 screenCoords;
 
 		if (worldToScreen(center, screenCoords, Engine::getViewMatrix(), viewport[2], viewport[3]))
 			DrawESPBox(e, screenCoords, font, color);
@@ -83,10 +83,10 @@ void esp::DrawESPBox(Entity* e, Vector3& screen, GL::Font& font, const GLubyte* 
 	float dist = localPlayer->vPosition.get3DDistance(e->vPosition);
 
 	float scale = (GAME_UNIT_MAGIC / dist) * (viewport[2] / VIRTUAL_SCREEN_WIDTH);
-	float x = screen.x - scale;
+	float x = screen.x - scale; Vector3 center = e->vHeadPos;
 	float y = screen.y - scale * PLAYER_ASPECT_RATIO;
 
-	float x2 = (screen.x + 7) + scale; /* location of the health bar relative to the box */
+	float x2 = (screen.x - 7) - scale; /* location of the health bar relative to the box */
 
 	float width = scale * 2;
 	float height = scale * PLAYER_ASPECT_RATIO * 2;
@@ -95,30 +95,34 @@ void esp::DrawESPBox(Entity* e, Vector3& screen, GL::Font& font, const GLubyte* 
 	float textY = y - ESP_FONT_HEIGHT / 2;
 
 
-	/* HEALTH BAR COLOR */
-	const float healthFrac = e->iHealth * 0.01f;
-
-	GLubyte healthColor[3] = {
-		255 * (1 - healthFrac),
-		(255 * healthFrac),
-		0
-	};
-
-	if (menu::bNameEsp)
-	{
+	/* Drawing the name */
+	if (menu::bNameEsp) 
 		font.Print(textX, textY, color, "%s", e->pEntityName);
-	}
+	
 
 	/* Drawing health bar */
-	if (menu::bHealthEsp)
+	if (menu::bHealthEsp) 
 	{
-		GL::DrawOutline(x2, y, 2.0f, height, 0.5f / scale, color, true);
-		GL::DrawFillRect(x2, y + height - (height * e->iHealth / 100), 2.0f, height * e->iHealth / 100, healthColor);
+		const float healthFrac = e->iHealth * 0.01f;
+
+		GLubyte healthColor[3] = {
+			255 * (1 - healthFrac),
+			(255 * healthFrac),
+			0
+		};
+
+		GL::DrawBox(x2, y, 2.0f, height, 0.3f / scale, rgb::black, true);
+
+		GL::DrawFillRect(
+			x2, 
+			y + height - (height * e->iHealth / 100), 
+			2.0f, 
+			height * e->iHealth / 100, 
+			healthColor);
 	}
 
 	/* Drawing the box */
 	if (menu::bBoxEsp) 
-	{
-		GL::DrawOutline(x, y, width, height, 0.2f, color, true);
-	}
+		GL::DrawBox(x, y, width, height, 0.2f, color, menu::bOutlineEsp);
+	
 }

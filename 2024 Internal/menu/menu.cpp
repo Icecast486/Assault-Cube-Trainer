@@ -1,5 +1,7 @@
 #include "menu.h"
 
+#include "../hacks/game.h"
+
 
 LRESULT CALLBACK hkWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -42,11 +44,11 @@ void menu::startMenu()
 {
     ImGui_ImplOpenGL2_NewFrame();
     ImGui_ImplWin32_NewFrame();
+
     ImGui::NewFrame();
-
     menu::render();
-
     ImGui::Render();
+
     ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 }
 
@@ -54,13 +56,12 @@ void menu::render()
 {
     if (menu::bIsOpen)
     {
-        ImGui::SetNextWindowSize(ImVec2(400, 300));
-        ImGui::Begin("AssaultCube Trainer - OpenGL");
-
+        ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Once);
+        ImGui::Begin("AssaultCube Trainer x86 - OpenGL", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        
         if (ImGui::BeginTabBar("Tabs")) /* Begin Tab Bar */
         {
-
-            
+           
             if (ImGui::BeginTabItem("Player"))
             {
                 ImGui::SeparatorText("Player");
@@ -73,7 +74,9 @@ void menu::render()
             if (ImGui::BeginTabItem("Aim"))
             {
                 ImGui::SeparatorText("Aim");
+
                 ImGui::Checkbox("Aimbot", &menu::bAimbot);
+                ImGui::Separator();
                 ImGui::EndTabItem();
             }
 
@@ -82,22 +85,25 @@ void menu::render()
             {
                 ImGui::SeparatorText("Visuals");
                 ImGui::Checkbox("ESP", &bEsp);
+                ImGui::Separator();
 
                 if (menu::bEsp) 
                 {
                     ImGui::Checkbox("Box", &menu::bBoxEsp);
+                    ImGui::Checkbox("Ammo", &menu::bAmmoEsp);
                     ImGui::Checkbox("Health", &menu::bHealthEsp);
                     ImGui::Checkbox("Name", &menu::bNameEsp);
+					ImGui::Checkbox("Outline", &menu::bOutlineEsp);
                 }
 
                 ImGui::EndTabItem();
             }
 
+
             if (ImGui::BeginTabItem("Game"))
             {
                 ImGui::SeparatorText("Game");
-                ImGui::Text("Not Yet Implemented");
-
+                ImGui::Text("Not Implemented");
                 ImGui::EndTabItem();
             }
             
@@ -105,14 +111,32 @@ void menu::render()
             if (ImGui::BeginTabItem("Misc"))
             {
                 ImGui::SeparatorText("Miscellaneous");
-                ImGui::Text("Not Yet Implemented");
-
+                //ImGui::Checkbox("Debug Mode", &menu::bDebugMode);
+                ImGui::Text("Not Implemented");
                 ImGui::EndTabItem();
             }
 
+			if (menu::bDebugMode)
+			{
+                if (ImGui::BeginTabItem("Debug"))
+                {
+                    ImGui::SeparatorText("Debug");
+
+					ImGui::Text("View Matrix: %p", Engine::viewMatrix);
+
+                    for (int i = 0; i < 16; i += 4)
+                    {
+						ImGui::Text("[%.1f] [%.1f] [%.1f] [%.1f]\n", i, Engine::viewMatrix[i], Engine::viewMatrix[i + 1], Engine::viewMatrix[i + 2], Engine::viewMatrix[i + 3]);
+                    }
+
+                    ImGui::EndTabItem();
+                }
+			}
+            
+
             if (ImGui::BeginTabItem("Credits"))
             {
-                ImGui::SeparatorText("Assault Cube Trainer x86");
+                ImGui::SeparatorText("AssaultCube Trainer x86");
                 ImGui::LabelText("Icecast486", "Developer: ");
 
                 ImGui::SeparatorText("Tanks :)");

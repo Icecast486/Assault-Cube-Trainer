@@ -7,6 +7,7 @@
 #include "../menu/menu.h"
 #include "../hacks/esp.h"
 #include "../memory/offsets.h"
+#include "../hacks/game.h"
 
 /* 
 	This is where is goes down!!! :O
