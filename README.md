@@ -41,6 +41,8 @@ After injecting the DLL, use the following keys to control the trainer:
 
 Here are some screenshots of the visuals and the console window that appears.
 
-![Screenshot 2024-12-19 010819](https://github.com/user-attachments/assets/a49faf8e-c01a-4808-aa1d-7b34c4c39780)
-![Screenshot 2024-12-19 011041](https://github.com/user-attachments/assets/a712062b-19b9-4e41-8e4f-f05502031781)
+![Screenshot 2025-04-08 172853](https://github.com/user-attachments/assets/a4826820-c769-4452-9c51-75f64eb9952f)
+![Screenshot 2025-04-08 172928](https://github.com/user-attachments/assets/72e4b3c1-cbd3-4d8f-9803-f9b750d3997c)
+![Screenshot 2025-04-08 172954](https://github.com/user-attachments/assets/b3e48685-faf9-4a5b-a8db-34708d8e5fe1)
+
 
