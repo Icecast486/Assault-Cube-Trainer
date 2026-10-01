@@ -6,6 +6,8 @@
 #include <iostream>
 #include <ostream>
 
+#define PI 3.14154
+
 struct Vector3
 {
 	float x, y, z;

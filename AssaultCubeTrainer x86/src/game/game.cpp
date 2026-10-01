@@ -4,10 +4,10 @@
 #include "game.h"
 
 #include "../features/visuals/esp.h"
+#include "../features/aimbot/aimbot.h"
 
 #include "../trainer/trainer.h"
 #include "../game/offsets.h"
-
 
 
 /* wglSwapBuffers*/
@@ -18,6 +18,9 @@ BOOL __stdcall assault_game::hook::hk_wglSwapBuffers(HDC hDc) {
 
     if (menu::menu_is_open)
         menu::start_menu();
+
+    if (menu::features::aimbot::b_aimbot)
+        aimbot::execute();
 
     if (menu::features::visuals::b_esp)
         esp::BeginESPDraw(hDc);
@@ -32,12 +35,10 @@ BOOL __stdcall assault_game::hook::hk_wglSwapBuffers(HDC hDc) {
 }
 
 
-
 void __stdcall assault_game::hook::hk_doDamageWrapper(int weapon_dmg, int hit_ent, int shooter_ent, unsigned int param_4, BYTE param_5, char param_6, char param_7) {
     std::cout << "An ent was hit\n";
     assault_game::original_function::o_doDamageWrapper(weapon_dmg, hit_ent, shooter_ent, param_4, param_5, param_6, param_7);
 }
-
 
 
 /* CallWindowProc */
@@ -61,8 +62,6 @@ LRESULT __stdcall assault_game::hook::hk_CallWindowProc(HWND hwnd, UINT uMsg, WP
 
     return CallWindowProc(menu::o_window_process, hwnd, uMsg, wParam, lParam);
 }
-
-
 
 
 bool assault_game::is_team_game() {
@@ -100,8 +99,6 @@ bool assault_game::is_team_game() {
 }
 
 
-
-
 /* I don't like the way I did this... */
 /* TODO: Change this shiii... */
 Entity* assault_game::get_local_player() {
@@ -125,7 +122,6 @@ float* assault_game::get_view_matrix() {
 
     return global::g_view_matrix;
 }
-
 
 
 EntityList* assault_game::get_entity_list() {

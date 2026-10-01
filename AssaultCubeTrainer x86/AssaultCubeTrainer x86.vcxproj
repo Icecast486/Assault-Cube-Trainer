@@ -148,6 +148,8 @@
     <ClCompile Include="src\dep\minhook\src\trampoline.c" />
     <ClCompile Include="src\dllmain.cpp" />
     <ClCompile Include="src\draw\gldraw.cpp" />
+    <ClCompile Include="src\features\aimbot\aimbot.cpp" />
+    <ClCompile Include="src\features\aimbot\aimbot.h" />
     <ClCompile Include="src\features\visuals\esp.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\menu\menu.cpp" />
