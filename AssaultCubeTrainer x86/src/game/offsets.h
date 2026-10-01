@@ -1,0 +1,15 @@
+#pragma once
+
+#ifndef OFFSETS_H
+#define OFFSETS_H
+
+#define OFFSET_LOCALENT   0x17E0A8
+#define OFFSET_MAXPLAYERS 0x18AC0C
+#define OFFSET_ENTLIST    0X18AC04
+#define OFFSET_VIEWMATRIX 0x17DFD0
+#define OFFSET_GAMEMODE   0x18ABF8
+
+/* Function Offsets*/
+#define OFFSET_DODAMAGEWRAPPER 0x7D000
+
+#endif
