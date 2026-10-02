@@ -65,5 +65,20 @@ void aimbot::execute()
 	if (target == nullptr || localPlayer == nullptr)
 		return;
 
-	localPlayer->vViewAngles = get_angles(localPlayer->vHeadPos, target->vHeadPos);
+	ViewAngles enemy_angle = get_angles(localPlayer->vHeadPos, target->vHeadPos);
+
+	if (menu::features::aimbot::b_smoothing)
+	{
+		ViewAngles delta = enemy_angle - localPlayer->vViewAngles; 
+
+		while (delta.yaw > 180.f) delta.yaw -= 360.f;
+		while (delta.yaw < -180.f) delta.yaw += 360.f;
+
+		localPlayer->vViewAngles = localPlayer->vViewAngles + delta / menu::features::aimbot::f_smoothing;
+	}
+	else
+	{
+		localPlayer->vViewAngles = enemy_angle;
+	}
+
 }

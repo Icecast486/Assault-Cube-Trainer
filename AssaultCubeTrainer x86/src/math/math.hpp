@@ -279,16 +279,21 @@ struct Vector4
 
 struct ViewAngles
 {
-public:
-	float yaw, pitch, roll;
+    float yaw, pitch, roll;
 
-	ViewAngles() : yaw{ 0.0f }, pitch{ 0.0f }, roll{ 0.0f } {}
+    ViewAngles() : yaw(0.f), pitch(0.f), roll(0.f) {}
+    ViewAngles(float p, float y, float r = 0.f) : yaw(y), pitch(p), roll(r) {}
 
-	friend std::ostream& operator<<(std::ostream& stream, ViewAngles& print)
-	{
-		stream << "(" << print.pitch << ", " << print.yaw << ", " << print.roll << ")";
-		return stream;
-	}
+    ViewAngles operator+(const ViewAngles& o) const { return { pitch + o.pitch, yaw + o.yaw, roll + o.roll }; }
+    ViewAngles operator-(const ViewAngles& o) const { return { pitch - o.pitch, yaw - o.yaw, roll - o.roll }; }
+    ViewAngles operator+(float c) const { return { pitch + c, yaw + c, roll }; }
+    ViewAngles operator/(float s) const { return { pitch / s, yaw / s, roll / s }; }
+    ViewAngles operator*(float s) const { return { pitch * s, yaw * s, roll * s }; }
+
+    friend std::ostream& operator<<(std::ostream& stream, const ViewAngles& v)
+    {
+        return stream << "(" << v.pitch << ", " << v.yaw << ", " << v.roll << ")";
+    }
 };
 
 

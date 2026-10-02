@@ -89,8 +89,7 @@ void menu::render()
             ImGui::Checkbox("Smoothing", &features::aimbot::b_smoothing);
 
             if (features::aimbot::b_smoothing) {
-                ImGui::SameLine();
-                ImGui::SliderFloat("##SmoothAmount", &features::aimbot::f_smoothing, 1, 10);
+                ImGui::SliderFloat("Smooth Factor", &features::aimbot::f_smoothing, 1, 80);
             }
 
             ImGui::EndTabItem();

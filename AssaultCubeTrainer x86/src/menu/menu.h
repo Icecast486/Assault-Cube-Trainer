@@ -51,7 +51,7 @@ namespace menu
 			inline bool b_aimbot;
 			inline bool b_smoothing;
 
-			inline float f_smoothing;
+			inline float f_smoothing = 1.0f;
 		}
 
 		namespace visuals {

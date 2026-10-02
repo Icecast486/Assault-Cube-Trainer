@@ -8,7 +8,7 @@
 
 
 const int VIRTUAL_SCREEN_WIDTH = 600;
-const int GAME_UNIT_MAGIC = 400;
+const int GAME_UNIT_MAGIC = 320;
 
 const float PLAYER_HEIGHT = 5.25f;
 const float PLAYER_WIDTH = 2.0f;
